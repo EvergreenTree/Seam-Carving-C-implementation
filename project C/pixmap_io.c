@@ -9,31 +9,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #define O_BINARY 0
-#define IO_LEN	(1<<30)	
+#define IO_LEN    (1<<30)
 //#endif
 
 #if defined(THINK_C) || defined(__MWERKS__)
 #include <unix.h>
-#define IO_LEN	(1<<14)	
-#endif
-
-#ifndef FALSE
-#define FALSE (0)
-#define TRUE (1)
-#endif
-
-#ifdef sun
-extern char *sys_errlist[];
-char *strerror(int err)
-{
-return sys_errlist[err];
-}
+#define IO_LEN    (1<<14)
 #endif
 
 #include "pixmap_io.h"
-
-#define MAGIC_PGM	"P5\n"
-#define MAGIC_PPM	"P6\n"
 
 static int match_key(int fd, char *key)
 {

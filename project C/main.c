@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "pixmap_io.h"
+#import "pixmap_io.c"
 //#include "pixmap_io.c"//in Xcode ,I don't need to include this, strangely...
 
 //Project

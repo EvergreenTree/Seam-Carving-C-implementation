@@ -1,3 +1,21 @@
+
+#ifndef FALSE
+#define FALSE (0)
+#define TRUE (1)
+#endif
+
+#ifdef sun
+extern char *sys_errlist[];
+char *strerror(int err)
+{
+    return sys_errlist[err];
+}
+#endif
+
+#define MAGIC_PGM    "P5\n"
+#define MAGIC_PPM    "P6\n"
+
+
 static unsigned char *alloc_pixmap(long size);
 
 unsigned char *load_pixmap(char *filename, int *width, int *height);
