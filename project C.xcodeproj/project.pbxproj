@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A01345161F9782D400A4CEBC /* file.c in Sources */ = {isa = PBXBuildFile; fileRef = A01345151F9782D400A4CEBC /* file.c */; };
+		A01DDFC01FCD92B500DD4B22 /* datastructure.c in Sources */ = {isa = PBXBuildFile; fileRef = A01DDFBE1FCD92B500DD4B22 /* datastructure.c */; };
 		A058FEAE1F7BC80A00920F85 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = A058FEAD1F7BC80A00920F85 /* main.c */; };
-		A0C253C31FB31B7B00EC585B /* pixmap_io.c in Sources */ = {isa = PBXBuildFile; fileRef = A0C253C21FB31B7B00EC585B /* pixmap_io.c */; };
 		A0FC7B3E1F851746002C45F1 /* sort.c in Sources */ = {isa = PBXBuildFile; fileRef = A0FC7B3C1F851746002C45F1 /* sort.c */; };
 /* End PBXBuildFile section */
 
@@ -27,15 +26,11 @@
 
 /* Begin PBXFileReference section */
 		A0128EB81FA8B80C00708DE0 /* PengBrew.pgm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = PengBrew.pgm; sourceTree = "<group>"; };
-		A0128EBA1FA8B89800708DE0 /* pixmap_io.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pixmap_io.h; sourceTree = "<group>"; };
-		A01345151F9782D400A4CEBC /* file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = file.c; sourceTree = "<group>"; };
+		A01DDFBE1FCD92B500DD4B22 /* datastructure.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = datastructure.c; sourceTree = "<group>"; };
+		A01DDFBF1FCD92B500DD4B22 /* datastructure.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = datastructure.h; sourceTree = "<group>"; };
 		A058FEAA1F7BC80A00920F85 /* project C */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "project C"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A058FEAD1F7BC80A00920F85 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main.c; path = "project C/main.c"; sourceTree = SOURCE_ROOT; };
-		A058FEB71F81195B00920F85 /* File.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = File.txt; sourceTree = "<group>"; };
-		A0C253C21FB31B7B00EC585B /* pixmap_io.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pixmap_io.c; sourceTree = "<group>"; };
-		A0FC7B3B1F850747002C45F1 /* datastructure.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = datastructure.h; sourceTree = "<group>"; };
 		A0FC7B3C1F851746002C45F1 /* sort.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sort.c; sourceTree = "<group>"; };
-		A0FC7B3F1F85836C002C45F1 /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = matrix.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,15 +63,11 @@
 		A058FEAC1F7BC80A00920F85 /* project C */ = {
 			isa = PBXGroup;
 			children = (
-				A0C253C21FB31B7B00EC585B /* pixmap_io.c */,
-				A0128EBA1FA8B89800708DE0 /* pixmap_io.h */,
 				A0128EB81FA8B80C00708DE0 /* PengBrew.pgm */,
 				A058FEAD1F7BC80A00920F85 /* main.c */,
-				A058FEB71F81195B00920F85 /* File.txt */,
-				A0FC7B3B1F850747002C45F1 /* datastructure.h */,
 				A0FC7B3C1F851746002C45F1 /* sort.c */,
-				A0FC7B3F1F85836C002C45F1 /* matrix.h */,
-				A01345151F9782D400A4CEBC /* file.c */,
+				A01DDFBE1FCD92B500DD4B22 /* datastructure.c */,
+				A01DDFBF1FCD92B500DD4B22 /* datastructure.h */,
 			);
 			path = "project C";
 			sourceTree = "<group>";
@@ -139,10 +130,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A01DDFC01FCD92B500DD4B22 /* datastructure.c in Sources */,
 				A0FC7B3E1F851746002C45F1 /* sort.c in Sources */,
 				A058FEAE1F7BC80A00920F85 /* main.c in Sources */,
-				A0C253C31FB31B7B00EC585B /* pixmap_io.c in Sources */,
-				A01345161F9782D400A4CEBC /* file.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

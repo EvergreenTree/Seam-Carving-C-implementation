@@ -57,3 +57,18 @@ void trifusion(int t[], int i, int j){
     }
 }
 
+//fft
+void prod(double A[], double B[], double outcome[],double n){
+    int i;
+    for(i = 0; i < n; i++) outcome[i] = A[i] * B[i];
+}
+
+//void conv(double x[], double y[], int r[], int lx, int ly){
+//    double r[0];
+//    r = (double *)malloc(sizeof(double));
+//    return r;
+//}
+
+
+
+

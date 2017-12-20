@@ -1,2 +1,1 @@
-dependencies: \
-  /Users/EvergreenFu/Documents/Xcode/project\ C/project\ C/file.c
+dependencies: /Users/EvergreenFu/GitHub/Seam-Carving/project\ C/file.c

@@ -9,7 +9,6 @@
 #ifndef datastructure_h
 #define datastructure_h
 
-#endif /* datastructure_h */
 
 // define bool
 #if !defined(__bool_true_false_are_defined) && !defined(__cplusplus)
@@ -33,87 +32,28 @@ typedef struct Array{
     Node *head;//head of the array
 } Array;
 
-Array *array_init(void){
-//initialize an array
-    Array *array=(Array *)malloc(sizeof *array);
-    if(array==NULL)
-        return NULL;//failed to initialize..
-    array->count = 0;
-    array->head = NULL;//!!!!!!!!!!
-    return array;
-}
+// define a bitree
+typdef struct TNode {
+    Item item;
+    struct TNode *left;
+    struct TNode *right;
+} TNode;
 
-bool array_push(Array *array, Item item){
-//push an item to the top
-    Node *node = (Node *) malloc((sizeof *node));
-    if(node == NULL) return false;
-    
-    node->item = item;
-    node->next = array->head;
-    
-    array->head=node;
-    array->count ++;
-    return true;
-}
+typdef struct BiTree{
+    TNode *root;
+} Bitree
 
-Node *array_find(Array *array, size_t position){
-//find the position of a certain node
-    int i;
-    Node *needle = array->head;
-    for(i=0;i<position;i++){
-        needle=needle->next;
-    }
-    return needle;
-}
+//define a skiplist
+typedef struct SNode{
+    Item item;
+    struct SNode *right;
+    struct SNode *down;
+}SNode;
 
-Item array_delete(Array *array,size_t n){
-//delete the nth element (for head node, n=0)
-    if(array->head==NULL){ //or array->count == 0
-        printf("error: nothing to pop.\n");
-        return -999;//question: how to return a better error message?
-    }
-    
-    Item result;
-    if(n>0){
-    Node *needle = array_find(array, n-1);
-    Node *newnext = needle->next->next;
-    result = needle->next->item;
-    
-    free(needle->next);
-    needle->next = newnext;
-    }
-    else{
-        result = array->head->item;
-        free(array->head);
-        array->head = NULL;
-    }
-    array->count --;
-    return result;
-}
-
-Item array_pop(Array *array){
-    //pop the last node
-    return array_delete(array, array->count-1);
-}
-
-bool array_isempty(Array *array){
-    return array->head == NULL ? true : false;
-}
-
-void array_clean(Array *array){
-    while(!array_isempty(array)){
-        array_pop(array);
-    }
-}
-
-void array_distroy(Array *array){
-    array_clean(array);
-    free(array);
-}
-//useful functions
+typedef struct Skiplist{
+    SNode *head;
+}Skiplist;
 
 
 
-//used in: void qsort(num_nodes, n, sizeof(Node), compar)
-
-
+#endif /* datastructure_h */
