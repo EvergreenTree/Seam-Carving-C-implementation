@@ -15,25 +15,18 @@
 
 int main(int argc, const char **argv){
 
-    char *open_name = "../pic/lena.ppm";
+    // char *open_name = "../pic/lena/lena.ppm";
+    char *open_name = "../pic/fu/fu.ppm";
+    // image t= read_image(open_name); // aribitrary format. this doesn't work well (green screen) because of a error by ImageMagick
     
-    // image t= read_image(open_name); // aribitrary format. this doesn't work because of a error by ImageMagick
-    
-    char *filter = "Sobel";//"Sobel", "Central", "Prewitt"; default = "Central"
-
+    char *filter = "Sobel";//"Sobel", "Central", "Prewitt"; default = "Central(Simple)"
+    char *direction = "Vertical";//"Horizontal";default = "Vertical"
+    char *mode = "Pic";//"Seam","Energy","Gradient";default = "Picture"
     image t = get_ppm(fopen(open_name,"r"));
-
-    // transpose(t);
-
-    // image t1=seam_carving(t,50,filter);
-    image t1=seam_carving_showseam(t,3,filter);
-
-    // transpose(t1);
-
+    image t1=seam_carving(t,10,filter,direction,mode);
+    // image t2=half(t);
     char *save_name = "../pic/output.ppm";
-
     output_ppm(fopen(save_name,"w"),t1);
-
 
     return 0;
 }
