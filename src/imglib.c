@@ -4,7 +4,8 @@
 //
 //  Created by Fu Changqing on 21/11/2017.
 //  Copyright © 2017 Fu Changqing. All rights reserved.
-//
+//  original author: https://rosettacode.org/wiki/Category:Raster_graphics_operations
+
 
 #include "imglib.h"
 
@@ -33,22 +34,6 @@ void free_img(image img)
 void free_grayimg(grayimage grayimg)
 {
     free_img((image)grayimg);
-}
-
-void fill_img(
-              image img,
-              color_component r,
-              color_component g,
-              color_component b )
-{
-    unsigned int i, n;
-    n = img->width * img->height;
-    for (i=0; i < n; ++i)
-    {
-        img->buf[i][0] = r;
-        img->buf[i][1] = g;
-        img->buf[i][2] = b;
-    }
 }
 
 void put_pixel_unsafe(

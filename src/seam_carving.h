@@ -4,7 +4,8 @@
 //
 //  Created by Fu Changqing on 21/11/2017.
 //  Copyright © 2017 Fu Changqing. All rights reserved.
-//
+//	original author: https://rosettacode.org/wiki/Category:Raster_graphics_operations
+
 
 #ifndef seam_carving_h
 #define seam_carving_h
@@ -14,8 +15,6 @@
 #include <limits.h>
 
 #define NO_LAST 10
-
-grayimage gradient(grayimage);
 
 typedef struct seam{
 	struct seam *left;
@@ -28,7 +27,7 @@ typedef struct seam{
 	pixel1 lum;
 	pixel col;
 	unsigned int gra;
-	unsigned int energy;
+	unsigned long energy;
 } seam;////a little question: duplicate name works
 typedef struct {
 	unsigned int width;
@@ -40,6 +39,10 @@ typedef struct {
 } seam_bundle_t;
 typedef seam_bundle_t * seam_bundle;
 
+//functions
+void transpose(image a);
+grayimage gradient(grayimage);
+seam_bundle bundlize(image img, char *filter);
 
 
 #endif /* seam_carving_h */

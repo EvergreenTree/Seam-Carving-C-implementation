@@ -6,12 +6,27 @@
 //  Copyright © 2017 Fu Changqing. All rights reserved.
 //
 #include <math.h>
+#include <string.h>
 
 #include "imglib.h"
 #include "seam_carving.h"
 
 int max(int x, int y){return x > y ? x : y;}
 int min(int x, int y){return x < y ? x : y;}
+
+void transpose(image a){
+    unsigned Y = a->height,X = a->width,x,y;
+    image b = alloc_img(Y,X);
+    for(x = 0; x < X; x++){
+        for(y = 0; y < Y; Y++){
+            b->buf[x*Y+y][0] = a->buf[y*X+x][0];
+            b->buf[x*Y+y][1] = a->buf[y*X+x][1];
+            b->buf[x*Y+y][2] = a->buf[y*X+x][2];
+        }
+    }
+    free_img(a);//memory of original pic
+    a = b;
+}
 
 seam_bundle alloc_seam_bundle(unsigned int width, unsigned int height)
 {
@@ -83,7 +98,7 @@ grayimage gradient_filter(grayimage img, int wx[], int wy[]){//w is a 3*3 window
     return grad;
 }
 
-seam_bundle bundlize(image img, int filter){
+seam_bundle bundlize(image img, char *filter){
     unsigned int width = img->width, height = img->height;
     seam_bundle s = alloc_seam_bundle(width,height);
     unsigned int i,y;
@@ -91,27 +106,24 @@ seam_bundle bundlize(image img, int filter){
     grayimage gimg = tograyscale(img);
     grayimage grad;
 
-    switch (filter){
-    //1 for sobel, 2 for central, default for sentral (simple implementation)
-    case 1:{
-    int wx[9] = {1,0,-1,2,0,-2,1,0,-1};
-
-    int wy[9] = {1,2,1,0,0,0,-1,-2,-1};
-    grad = gradient_filter(gimg,wx,wy);
-    };break;
-
-    case 2: {
-    int wx[9] = {0,0,0,1,0,-1,0,0,0};
-
-    int wy[9] = {0,1,0,0,0,0,0,-1,0};
-    grad = gradient_filter(gimg,wx,wy);
-    }break;
-
-    default:{
-    grad = gradient(gimg);
-    };break;
+    if(!strcmp(filter,"Sobel")){
+        int wx[9] = {1,0,-1,2,0,-2,1,0,-1};
+        int wy[9] = {1,2,1,0,0,0,-1,-2,-1};
+        grad = gradient_filter(gimg,wx,wy);
     }
-
+    else if(!strcmp(filter,"Central")){
+        int wx[9] = {0,0,0,1,0,-1,0,0,0};
+        int wy[9] = {0,1,0,0,0,0,0,-1,0};
+        grad = gradient_filter(gimg,wx,wy);
+    }
+    else if(!strcmp(filter,"Prewitt")){
+        int wx[9] = {1,0,-1,1,0,-1,1,0,-1};
+        int wy[9] = {1,1,1,0,0,0,-1,-1,-1};
+        grad = gradient_filter(gimg,wx,wy);
+    }
+    else
+        grad = gradient(gimg);
+    
     //assign reft, right, values
     s->buf[0].right = s->buf+1;
     s->buf[0].left = NULL;
@@ -358,29 +370,22 @@ void delete_seam(seam_bundle s){
 }
 
 
-image seam_carving(image img, unsigned int target_width){
+image seam_carving(image img, unsigned int target_width, char *filter){
     printf("building structure\n");
-
-    int filter = 0;//1 = "sobel", 2 = "center"
-
     seam_bundle s = bundlize(img,filter);
 
     unsigned k;
-
     for(k=0;k < target_width;k++){
         printf("========\nOperating Seam %u\n",k+1);
         printf("compute energy\n");
         compute_energy(s);
         show_seam(s);
-
         printf("deleting seam\n");
             delete_seam(s);
     }
     // printf("========\nOperating Seam %u\n",k+1);
     // printf("compute energy\n");
     // compute_energy(s);
-
-    // free(rank);
 
     //show seam
     // printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
@@ -392,24 +397,58 @@ image seam_carving(image img, unsigned int target_width){
 
     // show gradient
     // image newimg = tocolor(debundlize_gradient(s));
-    image newimg = tocolor(debundlize_gradient_full(s));
+    // image newimg = tocolor(debundlize_gradient_full(s));
 
     //show image
+    image newimg = debundlize_color(s);
+    printf("new width: %u\n",newimg->width);
+
+    // enlarge
+    // image newimg = tocolor(enlarge(tograyscale(img),(unsigned)1));
+
+    free_seam_bundle(s);
+
+    return newimg;
+}
+
+image seam_carving_showseam(image img, unsigned int target_width, char *filter){
+    printf("building structure\n");
+    seam_bundle s = bundlize(img,filter);
+
+    unsigned k;
+    for(k=0;k < target_width;k++){
+        printf("========\nOperating Seam %u\n",k+1);
+        printf("compute energy\n");
+        compute_energy(s);
+        show_seam(s);
+        printf("deleting seam\n");
+            delete_seam(s);
+    }
+    // printf("========\nOperating Seam %u\n",k+1);
+    // printf("compute energy\n");
+    // compute_energy(s);
+
+    //show seam
+    // printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
+    image newimg = tocolor(debundlize_gradient_full(s));
+
+    // show energy
+    // image newimg = tocolor(debundlize_energy(s,13));
+
+    // show gradient
+    // image newimg = tocolor(debundlize_gradient(s));
+
+    // show image
     // image newimg = debundlize_color(s);
     // printf("new width: %u\n",newimg->width);
 
     // enlarge
     // image newimg = tocolor(enlarge(tograyscale(img),(unsigned)1));
 
-
-
     free_seam_bundle(s);
-
-    //printf("new img:%u\n",newimg->buf[1000][2]);
 
     return newimg;
 }
-
 
 
 
