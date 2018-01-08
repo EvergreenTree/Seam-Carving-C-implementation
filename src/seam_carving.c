@@ -383,11 +383,8 @@ image seam_carving(image img, unsigned int target_width, char *filter){
         printf("deleting seam\n");
             delete_seam(s);
     }
-    // printf("========\nOperating Seam %u\n",k+1);
-    // printf("compute energy\n");
-    // compute_energy(s);
 
-    //show seam
+    // show seam
     // printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
     // show_seam(s);
     // image newimg = tocolor(debundlize_gradient(s));
@@ -424,31 +421,9 @@ image seam_carving_showseam(image img, unsigned int target_width, char *filter){
         printf("deleting seam\n");
             delete_seam(s);
     }
-    // printf("========\nOperating Seam %u\n",k+1);
-    // printf("compute energy\n");
-    // compute_energy(s);
-
-    //show seam
-    // printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
     image newimg = tocolor(debundlize_gradient_full(s));
-
-    // show energy
-    // image newimg = tocolor(debundlize_energy(s,13));
-
-    // show gradient
-    // image newimg = tocolor(debundlize_gradient(s));
-
-    // show image
-    // image newimg = debundlize_color(s);
-    // printf("new width: %u\n",newimg->width);
-
-    // enlarge
-    // image newimg = tocolor(enlarge(tograyscale(img),(unsigned)1));
 
     free_seam_bundle(s);
 
     return newimg;
 }
-
-
-
