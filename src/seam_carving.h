@@ -43,6 +43,6 @@ typedef seam_bundle_t * seam_bundle;
 void transpose(image a);
 grayimage gradient(grayimage);
 seam_bundle bundlize(image img, char *filter);
-
+image half(image a);
 
 #endif /* seam_carving_h */

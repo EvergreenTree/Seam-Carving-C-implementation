@@ -18,7 +18,7 @@ void transpose(image a){
     unsigned Y = a->height,X = a->width,x,y;
     image b = alloc_img(Y,X);
     for(x = 0; x < X; x++){
-        for(y = 0; y < Y; Y++){
+        for(y = 0; y < Y; y++){
             b->buf[x*Y+y][0] = a->buf[y*X+x][0];
             b->buf[x*Y+y][1] = a->buf[y*X+x][1];
             b->buf[x*Y+y][2] = a->buf[y*X+x][2];
@@ -27,6 +27,21 @@ void transpose(image a){
     free_img(a);//memory of original pic
     a = b;
 }
+
+image half(image a){
+    unsigned Y = a->height,X = a->width/2,x,y;
+    image b = alloc_img(X,Y);
+    for(x = 0; x < X; x++){
+        for(y = 0; y < Y; y++){
+            b->buf[y*X+x][0] = (a->buf[y*a->width+2*x][0]+a->buf[y*a->width+2*x+1][0])/2;
+            b->buf[y*X+x][1] = (a->buf[y*a->width+2*x][1]+a->buf[y*a->width+2*x+1][1])/2;
+            b->buf[y*X+x][2] = (a->buf[y*a->width+2*x][2]+a->buf[y*a->width+2*x+1][2])/2;
+        }
+    }
+    return b;
+}
+
+
 
 seam_bundle alloc_seam_bundle(unsigned int width, unsigned int height)
 {
@@ -86,12 +101,12 @@ grayimage gradient_filter(grayimage img, int wx[], int wy[]){//w is a 3*3 window
     for(y=0;y<Y;y++){
         for (x=0; x<X-2; x++) {
             grad->buf[y*(X-2)+x][0] = 
-                                  abs(img_large->buf[y*X+x][0]*wx[0]     +img_large->buf[y*X+x+1][0]*wx[1]    +img_large->buf[y*X+x+2][0]*wx[2]
-                                     +img_large->buf[(y+1)*X+x][0]*wx[3] +img_large->buf[(y+1)*X+x+1][0]*wx[4]+img_large->buf[(y+1)*X+x+2][0]*wx[5]
-                                     +img_large->buf[(y+2)*X+x][0]*wx[6] +img_large->buf[(y+2)*X+x+1][0]*wx[7]+img_large->buf[(y+2)*X+x+2][0]*wx[8])
-                                + abs(img_large->buf[y*X+x][0]*wy[0]     +img_large->buf[y*X+x+1][0]*wy[1]    +img_large->buf[y*X+x+2][0]*wy[2]
-                                     +img_large->buf[(y+1)*X+x][0]*wy[3] +img_large->buf[(y+1)*X+x+1][0]*wy[4]+img_large->buf[(y+1)*X+x+2][0]*wy[5]
-                                     +img_large->buf[(y+2)*X+x][0]*wy[6] +img_large->buf[(y+2)*X+x+1][0]*wy[7]+img_large->buf[(y+2)*X+x+2][0]*wy[8]);
+            abs(img_large->buf[y*X+x][0]*wx[0]     +img_large->buf[y*X+x+1][0]*wx[1]    +img_large->buf[y*X+x+2][0]*wx[2]
+             +img_large->buf[(y+1)*X+x][0]*wx[3] +img_large->buf[(y+1)*X+x+1][0]*wx[4]+img_large->buf[(y+1)*X+x+2][0]*wx[5]
+             +img_large->buf[(y+2)*X+x][0]*wx[6] +img_large->buf[(y+2)*X+x+1][0]*wx[7]+img_large->buf[(y+2)*X+x+2][0]*wx[8])
+            + abs(img_large->buf[y*X+x][0]*wy[0]     +img_large->buf[y*X+x+1][0]*wy[1]    +img_large->buf[y*X+x+2][0]*wy[2]
+             +img_large->buf[(y+1)*X+x][0]*wy[3] +img_large->buf[(y+1)*X+x+1][0]*wy[4]+img_large->buf[(y+1)*X+x+2][0]*wy[5]
+             +img_large->buf[(y+2)*X+x][0]*wy[6] +img_large->buf[(y+2)*X+x+1][0]*wy[7]+img_large->buf[(y+2)*X+x+2][0]*wy[8]);
         }
     }
     free_grayimg(img_large);
@@ -370,10 +385,12 @@ void delete_seam(seam_bundle s){
 }
 
 
-image seam_carving(image img, unsigned int target_width, char *filter){
+image seam_carving(image img, unsigned int target_width, char *filter, char *direction, char *mode){
     printf("building structure\n");
+    if(!strcmp(direction,"Horizontal")){
+        transpose(img);
+    }
     seam_bundle s = bundlize(img,filter);
-
     unsigned k;
     for(k=0;k < target_width;k++){
         printf("========\nOperating Seam %u\n",k+1);
@@ -381,49 +398,30 @@ image seam_carving(image img, unsigned int target_width, char *filter){
         compute_energy(s);
         show_seam(s);
         printf("deleting seam\n");
-            delete_seam(s);
+        delete_seam(s);
+    }
+    image newimg;
+    if(!strcmp(mode,"Seam")){
+        //printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
+        newimg = tocolor(debundlize_gradient_full(s));
+    }
+    else if(!strcmp(mode,"Energy")){
+        int rate = 13;//adjust here for better color scale
+        newimg = tocolor(debundlize_energy(s,rate));
+    }
+    else if(!strcmp(mode,"Gradient")){
+        // image newimg = tocolor(debundlize_gradient(s));
+        newimg = tocolor(debundlize_gradient_full(s));
+    }
+    else{//mode = "Image"
+        newimg = debundlize_color(s);
+        printf("** new width: %u **\n",newimg->width);
     }
 
-    // show seam
-    // printf("seam position %ld\n",find_seam(s)-s->last_pixel+s->width-1);
-    // show_seam(s);
-    // image newimg = tocolor(debundlize_gradient(s));
-
-    // show energy
-    // image newimg = tocolor(debundlize_energy(s,13));
-
-    // show gradient
-    // image newimg = tocolor(debundlize_gradient(s));
-    // image newimg = tocolor(debundlize_gradient_full(s));
-
-    //show image
-    image newimg = debundlize_color(s);
-    printf("new width: %u\n",newimg->width);
-
-    // enlarge
-    // image newimg = tocolor(enlarge(tograyscale(img),(unsigned)1));
-
-    free_seam_bundle(s);
-
-    return newimg;
-}
-
-image seam_carving_showseam(image img, unsigned int target_width, char *filter){
-    printf("building structure\n");
-    seam_bundle s = bundlize(img,filter);
-
-    unsigned k;
-    for(k=0;k < target_width;k++){
-        printf("========\nOperating Seam %u\n",k+1);
-        printf("compute energy\n");
-        compute_energy(s);
-        show_seam(s);
-        printf("deleting seam\n");
-            delete_seam(s);
+    if(!strcmp(direction,"Horizontal")){
+        transpose(newimg);
     }
-    image newimg = tocolor(debundlize_gradient_full(s));
 
     free_seam_bundle(s);
-
     return newimg;
 }
